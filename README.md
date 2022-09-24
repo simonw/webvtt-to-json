@@ -21,6 +21,10 @@ To output JSON for a WebVTT file:
 
 This will output to standard output. Use `-o filename` to send it to a specified file.
 
+Subtitles can often include duplicate lines. Add `-d` or `--dedupe` to attempt to remove those duplicates from the output:
+
+    webvtt-to-json --dedupe subtitles.vtt
+
 You can also use:
 
     python -m webvtt_to_json ...
