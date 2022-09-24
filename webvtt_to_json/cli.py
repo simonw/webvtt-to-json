@@ -1,21 +1,22 @@
 import click
+import json
+import webvtt
 
 
-@click.group()
+@click.command()
 @click.version_option()
-def cli():
-    "Convert WebVTT to JSON, optionally removing duplicate lines"
-
-
-@cli.command(name="command")
-@click.argument(
-    "example"
-)
+@click.argument("path", type=click.File("r"))
 @click.option(
     "-o",
-    "--option",
-    help="An example option",
+    "--output",
+    type=click.File("w"),
+    default="-",
+    help="File to write output to",
 )
-def first_command(example, option):
-    "Command description goes here"
-    click.echo("Here is some output")
+def cli(path, output):
+    "Convert WebVTT to JSON, optionally removing duplicate lines"
+    captions = webvtt.read_buffer(path)
+    out = [{"start": c.start, "end": c.end, "lines": c.lines} for c in captions]
+    output.write(json.dumps(out, indent=2))
+    output.write("\n")
+    return

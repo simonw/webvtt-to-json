@@ -31,9 +31,7 @@ setup(
         [console_scripts]
         webvtt-to-json=webvtt_to_json.cli:cli
     """,
-    install_requires=["click"],
-    extras_require={
-        "test": ["pytest"]
-    },
+    install_requires=["click", "webvtt-py"],
+    extras_require={"test": ["pytest"]},
     python_requires=">=3.7",
 )
