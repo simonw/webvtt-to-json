@@ -2,7 +2,7 @@ from click.testing import CliRunner
 from webvtt_to_json.cli import cli
 import json
 import pathlib
-
+import pytest
 
 test_path = pathlib.Path(__file__).parent / "demo.vtt"
 
@@ -51,3 +51,23 @@ def test_webvtt_to_json_output():
         result = runner.invoke(cli, [str(test_path), "-o", "output.json"])
         assert result.exit_code == 0
         assert json.load(open("output.json")) == EXPECTED
+
+
+@pytest.mark.parametrize("option", ("-d", "--dedupe"))
+def test_webvtt_to_json_dedupe(option):
+    runner = CliRunner()
+    with runner.isolated_filesystem():
+        result = runner.invoke(cli, [str(test_path), option])
+        assert result.exit_code == 0
+        assert json.loads(result.output) == [
+            {
+                "start": "00:00:01.829",
+                "end": "00:00:01.839",
+                "lines": ["my career in side projects and open"],
+            },
+            {
+                "start": "00:00:04.550",
+                "end": "00:00:04.560",
+                "lines": ["source basically this is so i've been"],
+            },
+        ]
