@@ -25,9 +25,47 @@ Subtitles can often include duplicate lines. Add `-d` or `--dedupe` to attempt t
 
     webvtt-to-json --dedupe subtitles.vtt
 
+Use `-s` or `--single` to output single `"line"` keys instead of a `"lines"` array.
+
 You can also use:
 
     python -m webvtt_to_json ...
+
+## Output
+
+Standard output:
+```json
+[
+    {
+        "start": "00:00:00.000",
+        "end": "00:00:01.829",
+        "lines": [
+            " ",
+            "my<00:00:00.160><c> career</c><00:00:00.480><c> in</c><00:00:00.640><c> side</c><00:00:00.880><c> projects</c><00:00:01.280><c> and</c><00:00:01.520><c> open</c>"
+        ]
+    }
+]
+```
+`--dedupe` output:
+```json
+[
+    {
+        "start": "00:00:01.829",
+        "end": "00:00:01.839",
+        "lines": ["my career in side projects and open"]
+    }
+]
+```
+`--dedupe --single` output:
+```json
+[
+    {
+        "start": "00:00:01.829",
+        "end": "00:00:01.839",
+        "line": "my career in side projects and open"
+    }
+]
+```
 
 ## Development
 

@@ -7,6 +7,7 @@ import webvtt
 @click.version_option()
 @click.argument("path", type=click.File("r"))
 @click.option("-d", "--dedupe", is_flag=True, help="Remove duplicate lines")
+@click.option("-s", "--single", is_flag=True, help='Output single "line": per item')
 @click.option(
     "-o",
     "--output",
@@ -14,7 +15,7 @@ import webvtt
     default="-",
     help="File to write output to",
 )
-def cli(path, dedupe, output):
+def cli(path, dedupe, single, output):
     "Convert WebVTT to JSON, optionally removing duplicate lines"
     captions = webvtt.read_buffer(path)
     dicts = [{"start": c.start, "end": c.end, "lines": c.lines} for c in captions]
@@ -34,6 +35,9 @@ def cli(path, dedupe, output):
                 prev_line = line
             if not_dupe_lines:
                 dicts.append({"start": c.start, "end": c.end, "lines": not_dupe_lines})
+    if single:
+        for d in dicts:
+            d["line"] = "\n".join(d.pop("lines"))
     output.write(json.dumps(dicts, indent=2))
     output.write("\n")
     return

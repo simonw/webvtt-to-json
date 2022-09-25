@@ -71,3 +71,23 @@ def test_webvtt_to_json_dedupe(option):
                 "lines": ["source basically this is so i've been"],
             },
         ]
+
+
+@pytest.mark.parametrize("option", ("-s", "--single"))
+def test_webvtt_to_json_dedupe_single(option):
+    runner = CliRunner()
+    with runner.isolated_filesystem():
+        result = runner.invoke(cli, [str(test_path), "-d", option])
+        assert result.exit_code == 0
+        assert json.loads(result.output) == [
+            {
+                "start": "00:00:01.829",
+                "end": "00:00:01.839",
+                "line": "my career in side projects and open",
+            },
+            {
+                "start": "00:00:04.550",
+                "end": "00:00:04.560",
+                "line": "source basically this is so i've been",
+            },
+        ]
