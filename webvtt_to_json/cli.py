@@ -59,7 +59,7 @@ def cli(path, dedupe, single, unify, output):
                         prev_dict["lines"] += [line, ]
             else:
                 new_dicts.append(prev_dict)
-                prev_dict = {"start": c.start, "end": c.end, "lines": d["lines"]}
+                prev_dict = d
         if prev_dict is not None:
             new_dicts.append(prev_dict)
         dicts = new_dicts

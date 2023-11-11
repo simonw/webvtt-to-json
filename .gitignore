@@ -1,6 +1,7 @@
 .venv
 __pycache__/
-.idea
+.idea/
+build/
 *.py[cod]
 *$py.class
 venv
