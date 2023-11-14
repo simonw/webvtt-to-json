@@ -91,3 +91,36 @@ def test_webvtt_to_json_dedupe_single(option):
                 "line": "source basically this is so i've been",
             },
         ]
+
+@pytest.mark.parametrize("option", ("-u", "--unify"))
+def test_webvtt_to_json_dedup_unify_all_lines(option):
+    runner = CliRunner()
+    with runner.isolated_filesystem():
+        result = runner.invoke(cli, [str(test_path), "-d", option, 5000])
+        assert result.exit_code == 0
+        assert json.loads(result.output) == [
+            {
+                "start": "00:00:01.829",
+                "end": "00:00:04.560",
+                "lines": ["my career in side projects and open", "source basically this is so i've been"],
+            }
+        ]
+
+@pytest.mark.parametrize("option", ("-u", "--unify"))
+def test_webvtt_to_json_dedup_unify_no_lines(option):
+    runner = CliRunner()
+    with runner.isolated_filesystem():
+        result = runner.invoke(cli, [str(test_path), "-d", option, 10])
+        assert result.exit_code == 0
+        assert json.loads(result.output) == [
+            {
+                "start": "00:00:01.829",
+                "end": "00:00:01.839",
+                "lines": ["my career in side projects and open"],
+            },
+            {
+                "start": "00:00:04.550",
+                "end": "00:00:04.560",
+                "lines": ["source basically this is so i've been"],
+            },
+        ]
